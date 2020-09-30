@@ -12,8 +12,7 @@ def stakes_from_stdin():
                 stakes.append(stake)
                 stake = {}
         kv = line.strip().split(':')
-        if len(kv) == 2:
-            stake[kv[0].strip()] = kv[1].strip()
+        stake[kv[0].strip()] = kv[1].strip() if len(kv) == 2 else True
     if stake:
         stakes.append(stake)
     
@@ -23,8 +22,8 @@ def parse_query(args):
     query = {}
     for arg in args[1:]:
         kv = arg.split("=")
-        if len(kv) == 2:
-            query[kv[0]] = kv[1]
+        query[kv[0]] = kv[1] if len(kv) == 2 else True
+    print(query)
     return query
 
 def main(args):
@@ -45,9 +44,8 @@ def main(args):
     for stake in stakes:
         ok = True
         for key, value in query.items():
-            if stake[key] != value:
+            if not (key in stake and stake[key] == value):
                 ok = False
-            if not ok:
                 break
         if not ok:
             continue
